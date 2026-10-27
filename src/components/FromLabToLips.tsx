@@ -64,10 +64,9 @@ export const FromLabToLips: React.FC<FromLabToLipsProps> = ({ onOpenGallery }) =
               preload="metadata"
               poster={posterSrc}
               className="w-full h-full object-cover"
-              src={videoSrc}
+              src="/videos/WhatsApp%20Video%202026-10-27%20at%2011.33.20%20AM.mp4"
             >
-              <source src={videoSrc} type="video/mp4" />
-              <source src="/videos/WhatsApp Video 2026-10-27 at 11.33.20 AM.mp4" type="video/mp4" />
+              <source src="/videos/WhatsApp%20Video%202026-10-27%20at%2011.33.20%20AM.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
