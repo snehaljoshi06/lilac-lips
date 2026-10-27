@@ -1,66 +1,13 @@
-import React, { useState, useRef } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize2, Sparkles, Images, Upload } from 'lucide-react';
+import React from 'react';
+import { Images } from 'lucide-react';
 
 interface FromLabToLipsProps {
   onOpenGallery: (initialPhotoIndex?: number) => void;
 }
 
 export const FromLabToLips: React.FC<FromLabToLipsProps> = ({ onOpenGallery }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [hasVideoSource, setHasVideoSource] = useState<string | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        videoRef.current.play().then(() => {
-          setIsPlaying(true);
-        }).catch(() => {
-          setIsPlaying(false);
-        });
-      }
-    } else {
-      // In placeholder mode, toggle state for UI feedback
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-    }
-    setIsMuted(!isMuted);
-  };
-
-  const handleFullscreen = () => {
-    const playerContainer = document.getElementById('lab-video-container');
-    if (playerContainer) {
-      if (!document.fullscreenElement) {
-        playerContainer.requestFullscreen?.().catch(() => {});
-      } else {
-        document.exitFullscreen?.().catch(() => {});
-      }
-    }
-  };
-
-  const handleCustomVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setHasVideoSource(url);
-      setIsPlaying(true);
-      setTimeout(() => {
-        if (videoRef.current) {
-          videoRef.current.play().catch(() => {});
-        }
-      }, 100);
-    }
-  };
+  const videoSrc = '/videos/WhatsApp%20Video%202026-10-27%20at%2011.33.20%20AM.mp4';
+  const posterSrc = '/assets/aistudio/WhatsApp_Image_2026-10-27_at_11.35.21_AM__1__0dac55d1.jpeg';
 
   const processSteps = [
     {
@@ -105,122 +52,27 @@ export const FromLabToLips: React.FC<FromLabToLipsProps> = ({ onOpenGallery }) =
           </p>
         </div>
 
-        {/* Large Elegant Video Player Frame */}
+        {/* Large Video Player Frame with HTML5 Controls */}
         <div className="max-w-4xl mx-auto">
           <div
             id="lab-video-container"
-            className="relative aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-[#593A57] shadow-lg border border-[#DCD0F0] group"
+            className="relative aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-[#593A57] shadow-lg border border-[#DCD0F0] flex items-center justify-center"
           >
-            {hasVideoSource ? (
-              <video
-                ref={videoRef}
-                src={hasVideoSource}
-                poster="/assets/aistudio/WhatsApp_Image_2026-10-27_at_11.35.21_AM__1__0dac55d1.jpeg"
-                muted={isMuted}
-                playsInline
-                className="w-full h-full object-cover"
-                onEnded={() => setIsPlaying(false)}
-              />
-            ) : (
-              /* High-fidelity Video Player Placeholder with Real Lab Poster */
-              <div className="relative w-full h-full">
-                <img
-                  src="/assets/aistudio/WhatsApp_Image_2026-10-27_at_11.35.21_AM__1__0dac55d1.jpeg"
-                  alt="Student chemistry laboratory setup with beaker and Bunsen burner"
-                  className="w-full h-full object-cover filter brightness-[0.82]"
-                />
-                
-                {/* Measured Scrim for legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-
-                {/* Status notice */}
-                <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full text-white/90 text-xs font-mono">
-                  <span className="w-2 h-2 rounded-full bg-[#DCD0F0]" />
-                  <span>College Chemistry Lab Reel</span>
-                </div>
-              </div>
-            )}
-
-            {/* Central Play/Pause Action Overlay */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              {(!isPlaying || !hasVideoSource) && (
-                <button
-                  onClick={togglePlay}
-                  className="pointer-events-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/90 hover:bg-white text-[#593A57] flex items-center justify-center shadow-xl hover:scale-105 transition-all cursor-pointer group-hover:ring-4 group-hover:ring-[#DCD0F0]/50"
-                  aria-label="Play video"
-                >
-                  <Play className="w-7 h-7 sm:w-8 sm:h-8 fill-[#593A57] ml-1" />
-                </button>
-              )}
-            </div>
-
-            {/* Video Player Control Bar */}
-            <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex items-center justify-between text-white text-xs z-10">
-              
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={togglePlay}
-                  aria-label={isPlaying ? 'Pause' : 'Play'}
-                  className="p-1.5 hover:text-[#DCD0F0] transition-colors cursor-pointer"
-                >
-                  {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 fill-current" />}
-                </button>
-                
-                <button
-                  onClick={toggleMute}
-                  aria-label={isMuted ? 'Unmute' : 'Mute'}
-                  className="p-1.5 hover:text-[#DCD0F0] transition-colors cursor-pointer"
-                >
-                  {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-                </button>
-
-                <span className="text-[11px] text-white/80 font-mono hidden sm:inline">
-                  {isPlaying ? '0:14 / 0:42' : '0:00 / 0:42'}
-                </span>
-              </div>
-
-              {/* Progress Scrubber Simulation */}
-              <div className="flex-1 max-w-xs mx-4 hidden md:block">
-                <div className="w-full bg-white/30 h-1.5 rounded-full overflow-hidden">
-                  <div
-                    className="bg-[#DCD0F0] h-full transition-all duration-300"
-                    style={{ width: isPlaying ? '35%' : '0%' }}
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {/* Upload or Connect Local Video File */}
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept="video/mp4,video/webm,video/quicktime"
-                  onChange={handleCustomVideoUpload}
-                  className="hidden"
-                />
-                
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  title="Connect real video file from your computer"
-                  className="px-2.5 py-1 rounded bg-white/20 hover:bg-white/30 text-white text-[11px] font-medium transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                  <Upload className="w-3 h-3" />
-                  <span className="hidden sm:inline">Connect MP4</span>
-                </button>
-
-                <button
-                  onClick={handleFullscreen}
-                  aria-label="Fullscreen"
-                  className="p-1.5 hover:text-[#DCD0F0] transition-colors cursor-pointer"
-                >
-                  <Maximize2 className="w-4 h-4" />
-                </button>
-              </div>
-
-            </div>
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              poster={posterSrc}
+              className="w-full h-full object-cover"
+              src={videoSrc}
+            >
+              <source src={videoSrc} type="video/mp4" />
+              <source src="/videos/WhatsApp Video 2026-10-27 at 11.33.20 AM.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
 
-          {/* Mandatory Caption specified in requirements */}
+          {/* Caption */}
           <div className="mt-4 text-center">
             <p className="text-sm font-serif italic text-[#593A57]">
               "A little look at how we made our first lip balm in the college chemistry lab."
@@ -288,7 +140,7 @@ export const FromLabToLips: React.FC<FromLabToLipsProps> = ({ onOpenGallery }) =
             ))}
           </div>
 
-          {/* CTA to Photo Gallery as specified */}
+          {/* CTA to Photo Gallery */}
           <div className="mt-10 text-center">
             <button
               onClick={() => onOpenGallery(0)}
