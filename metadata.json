@@ -1,0 +1,6 @@
+{
+  "name": "LILAC LIPS - Student Created Lip Balm",
+  "description": "A little lip balm made with care in our college chemistry lab, now with a brand of its own. A Little Love for Your Lips.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
